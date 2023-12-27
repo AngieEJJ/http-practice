@@ -47,8 +47,8 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   itemCount: 10,
                   itemBuilder: (context, index) {
-                    return AspectRatio(
-                      aspectRatio: 1 / 2,
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0), // 코너의 둥근 정도 조절
                       child: Image.network(
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4iuwXdFpW0BYdGdEWsN0YOyeRanfN_0g1FQ&usqp=CAU",
                         fit: BoxFit.cover,
