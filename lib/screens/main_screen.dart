@@ -12,13 +12,23 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final repository = ImageItemRepository();
-  var imageItems = [];
+  final searchTextEditingController = TextEditingController();
+  final repository = PixabayImageItemRepository();
+  List<ImageItem> imageItems = [];
+  bool isLoading = true;
 
- Future <void> searchImage(String query) async {
-   imageItems = await repository.getImageItems(query);
-   setState(() {
-   });
+  Future<void> searchImage(String query) async {
+    setState(() {
+      isLoading = false;
+    });
+    imageItems = await repository.getImageItems(query);
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    searchTextEditingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -30,6 +40,7 @@ class _MainScreenState extends State<MainScreen> {
           child: Column(
             children: [
               TextField(
+                controller: searchTextEditingController,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -42,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
                   suffixIcon: GestureDetector(
                     onTap: () {
                       // print('tapped!');
-                      searchImage('사과');
+                      searchImage(searchTextEditingController.text); //아이콘 클릭시 text를 얻어와서 textfield에 들어가도록.
                     },
                     child: const Icon(
                       Icons.search,
@@ -52,7 +63,8 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              Expanded(
+              isLoading ? const Center(child: CircularProgressIndicator())
+              : Expanded(
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -62,8 +74,7 @@ class _MainScreenState extends State<MainScreen> {
                   itemCount: imageItems.length,
                   itemBuilder: (context, index) {
                     final imageItem = imageItems[index];
-                    return ImageItemWidget(
-                        imageitem: imageItem);
+                    return ImageItemWidget(imageitem: imageItem);
                   },
                 ),
               ),
