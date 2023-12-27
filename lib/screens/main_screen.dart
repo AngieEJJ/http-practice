@@ -1,13 +1,26 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:image_search_app/model/image_item.dart';
+import 'package:image_search_app/repository/image_item_repository.dart';
+import 'package:image_search_app/widget/imgae_item_widget.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final repository = ImageItemRepository();
+  var imageItems = [];
+
+ Future <void> searchImage(String query) async {
+   imageItems = await repository.getImageItems(query);
+   setState(() {
+   });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
                   suffixIcon: GestureDetector(
                     onTap: () {
                       // print('tapped!');
+                      searchImage('사과');
                     },
                     child: const Icon(
                       Icons.search,
@@ -45,18 +59,14 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisSpacing: 32,
                     mainAxisSpacing: 32,
                   ),
-                  itemCount: 10,
+                  itemCount: imageItems.length,
                   itemBuilder: (context, index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0), // 코너의 둥근 정도 조절
-                      child: Image.network(
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4iuwXdFpW0BYdGdEWsN0YOyeRanfN_0g1FQ&usqp=CAU",
-                        fit: BoxFit.cover,
-                      ),
-                    );
+                    final imageItem = imageItems[index];
+                    return ImageItemWidget(
+                        imageitem: imageItem);
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
