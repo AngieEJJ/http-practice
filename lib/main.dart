@@ -33,8 +33,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 final List<Store> stores =[];
+var isLoading = true;
 
   Future fetch() async {
+    setState(() {
+      isLoading = true;
+    });
     var url = 'https://gist.githubusercontent.com/junsuk5/bb7485d5f70974deee920b8f0cd1e2f0/raw/063f64d9b343120c2cb01a6555cf9b38761b1d94/sample.json?lat=37.266389&lng=126.999333&m=5000';
 
     var response = await http.get(Uri.parse(url));
@@ -43,11 +47,14 @@ final List<Store> stores =[];
 
 
     setState(() {
+      stores.clear();
       jsonStores.forEach((e) {
       stores.add(Store.fromJson(e));
     });
+      isLoading = false;
     });
     //
+
 
 
 
@@ -67,8 +74,16 @@ void initState() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('데이터통신 연습'),),
-      body: ListView(
+      appBar: AppBar(
+        title: Text('마스크 재고 있는 곳 : ${stores.length}곳'),
+        actions: <Widget>[
+          IconButton(onPressed: fetch, icon: const Icon(Icons.refresh)
+          ),
+        ],
+      ),
+      body: isLoading ?
+          const Center(child: CircularProgressIndicator() )
+      : ListView(
         children: stores.map((e) =>
         ListTile(
           title: Text(e.name ?? ''),
