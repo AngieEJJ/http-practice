@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:practice3/model/store.dart';
 
-//UI와 로직 분리를 위해 레퍼지토리 생성
+//1. UI와 로직 분리를 위해 레퍼지토리 생성
+//mvvm 패턴에서의 모델이다. = 스토어 정보를 가져오는 모델 (즉 데이터 가져오는 처리를 한다.)
 class StoreRepository {
   Future<List<Store>> fetch() async {
     final List<Store> stores = [];
@@ -17,6 +18,14 @@ class StoreRepository {
       stores.add(Store.fromJson(e));
     });
 
-    return stores;
+    return stores.where((e)
+    => e.remainStat == 'plenty' ||
+        e.remainStat == 'some' ||
+        e.remainStat == 'few'
+    ).toList();
   }
 }
+// main에 있던 fetch 함수를 레퍼지토리로 분리시킴
+// 레퍼지토리로 이동한 fetch 함수는 더이상 void가 될 수 없기 때문에 retrun 이 꼭 필요하다.
+// main 파일에 같이 있을 때는 상단에 전역변수가 있어서 그냥 호출하면 되지만
+// 폴더가 나뉘게 되면 받아서 써야 한다 -> return이 없으면 받을게 없게 된다.
