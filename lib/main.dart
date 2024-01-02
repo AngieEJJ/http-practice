@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:practice3/model/store.dart';
+import 'package:practice3/repository/store_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,52 +31,49 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Store> stores = [];
   var isLoading = true;
-
-  Future fetch() async {
-    setState(() {
-      isLoading = true;
-    });
-    var url =
-        'https://gist.githubusercontent.com/junsuk5/bb7485d5f70974deee920b8f0cd1e2f0/raw/063f64d9b343120c2cb01a6555cf9b38761b1d94/sample.json?lat=37.266389&lng=126.999333&m=5000';
-
-    var response = await http.get(Uri.parse(url));
-    final jsonResult = jsonDecode(response.body);
-    final jsonStores = jsonResult['stores'];
-
-    setState(() {
-      stores.clear();
-      jsonStores.forEach((e) {
-        stores.add(Store.fromJson(e));
-      });
-      isLoading = false;
-    });
-    //
-  }
+  var stores = [];
+  final storeRepository = StoreRepository();
 
   @override
   void initState() {
     super.initState();
-    fetch();
-  } // 버튼을 누르는 등의 동작을 하지 않아도 앱 실행할 때 바로 실행되려면 initstate필요
-//다만 setstate를 해줘야 화면에 뜨기 때문에 감싸줘야한다.
+    //initState에서는 동기식으로 만들 수 없어서 then 활용 (fetch가 수행된 이후에 뭘 하라는 코드를 만들고 싶어서!)
+    //fetch로 가져온 결과인 valu를 stores 변수에 업데이트 한다. 그리고 화면을 다시 그린다.
+    //storeRepository.fetch()를 호출하고, setState 호출하여 화면을 업뎃하여 새로운 데이터를 표시한다.
+    //최신데이터를 가져와 UI를 갱신한다.
+    //만약 then이 없다면 비동기 작업이 완료됙 전에 다음 코드가 실행되어 데이터가 업데이트 되지 않은 채로 UI가 갱신된다.
+    storeRepository.fetch().then((value) {
+      setState(() {
+        stores = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('마스크 재고 있는 곳 : ${stores
-            .where((e) => e.remainStat == 'plenty' || e.remainStat == 'some').length}곳'),
+        title: Text(
+            '마스크 재고 있는 곳 : ${stores.where((e) => e.remainStat == 'plenty' || e.remainStat == 'some').length}곳'),
         actions: <Widget>[
-          IconButton(onPressed: fetch, icon: const Icon(Icons.refresh)),
+          IconButton(
+              onPressed: () {
+                storeRepository.fetch().then((value) {
+                  setState(() {
+                    stores = value;
+                  });
+                });
+              },
+              icon: const Icon(Icons.refresh)),
         ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
               children: stores
-              .where((e) => e.remainStat == 'plenty' || e.remainStat == 'some')
+                  .where(
+                      (e) => e.remainStat == 'plenty' || e.remainStat == 'some')
                   .map((e) => ListTile(
                         title: Text(e.name ?? ''),
                         subtitle: Text(e.addr ?? ''),
@@ -117,8 +114,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Column(
       children: <Widget>[
-        Text(remainStat, style: TextStyle(color:color)),
-        Text(description, style: TextStyle(color:color)),
+        Text(remainStat, style: TextStyle(color: color)),
+        Text(description, style: TextStyle(color: color)),
       ],
     );
   }
