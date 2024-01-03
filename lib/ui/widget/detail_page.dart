@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../../data/model/image_item.dart';
-
 class DetailPage extends StatelessWidget {
-  const DetailPage({super.key});
+  const DetailPage({super.key, required this.imgUrl});
+final String imgUrl;
+
 
   @override
   Widget build(BuildContext context) {
     timeDilation = 1.5;
-    final imageItem = ImageItem(imageUrl: 'imageUrl');
 
     return Scaffold(
       body: Column(
@@ -17,9 +16,9 @@ class DetailPage extends StatelessWidget {
         Expanded(
           child: GestureDetector(
             child: Hero(
-              tag: '1',
+              tag: imgUrl,
               child: Image.network(
-              imageItem.imageUrl
+              imgUrl
               ,fit: BoxFit.contain),
             ),
             onTap: () {
