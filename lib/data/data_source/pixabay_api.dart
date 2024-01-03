@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import '../dto/pixabay_dto.dart';
 import 'package:http/http.dart' as http;
 
