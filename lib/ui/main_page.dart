@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_with_provider/ui/detail_page.dart';
+import 'package:mvvm_with_provider/ui/widget/detail_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
