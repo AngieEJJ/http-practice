@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_with_provider/data/model/image_item.dart';
 import 'package:mvvm_with_provider/ui/widget/detail_page.dart';
 
 class MainPage extends StatelessWidget {
@@ -44,11 +45,12 @@ class MainPage extends StatelessWidget {
               child: GridView.builder(
                 itemCount: 1,
                 itemBuilder: (context, index) {
+                  final imageItem = ImageItem(imageUrl: 'imageUrl');
                   return GestureDetector(
                     child: Hero(
                       tag: '1',
                       child: Image.network(
-                          'https://cdn.pixabay.com/photo/2023/12/26/02/21/bird-8469368_640.jpg',
+                         imageItem.imageUrl,
                           fit: BoxFit.cover),
                     ),
                     onTap: () {
