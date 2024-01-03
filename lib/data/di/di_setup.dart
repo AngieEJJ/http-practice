@@ -11,3 +11,4 @@ void diSetup() {
   getIt.registerFactory<MainViewModel>(
           () => MainViewModel(repository: getIt<ImageItemRepository>()));
 }
+// 상태가 변경될때마다 리빌드 되니까 팩토리로 등록

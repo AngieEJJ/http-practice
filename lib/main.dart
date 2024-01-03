@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_with_provider/data/di/di_setup.dart';
-import 'package:mvvm_with_provider/ui/main_page.dart';
-import 'package:mvvm_with_provider/ui/main_view_model.dart';
-import 'package:provider/provider.dart';
+import 'package:mvvm_with_provider/routes.dart';
 
-import 'data/repository/image_item_repository.dart';
 
 void main() {
   diSetup();
@@ -16,17 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: router,
       title: 'Flutter Demo',
       theme: ThemeData(
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ChangeNotifierProvider (
-        create: (_) => MainViewModel(repository: getIt<ImageItemRepository>()),
-        child: const MainPage(),
-      )
     );
   }
 }
