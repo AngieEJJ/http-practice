@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_with_provider/data/di/di_setup.dart';
 import 'package:mvvm_with_provider/ui/main_page.dart';
 import 'package:mvvm_with_provider/ui/main_view_model.dart';
 import 'package:provider/provider.dart';
 
+import 'data/repository/image_item_repository.dart';
+
 void main() {
+  diSetup();
   runApp(const MyApp());
 }
 
@@ -20,7 +24,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: ChangeNotifierProvider (
-        create: (_) => MainViewModel(),
+        create: (_) => MainViewModel(repository: getIt<ImageItemRepository>()),
         child: const MainPage(),
       )
     );

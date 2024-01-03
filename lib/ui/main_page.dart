@@ -3,6 +3,9 @@ import 'package:mvvm_with_provider/ui/main_view_model.dart';
 import 'package:mvvm_with_provider/ui/widget/detail_page.dart';
 import 'package:provider/provider.dart';
 
+import '../data/di/di_setup.dart';
+import '../data/repository/image_item_repository.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -11,7 +14,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final viewModel = MainViewModel();
+  final viewModel = MainViewModel(repository: getIt<ImageItemRepository>());
   final searchTextEditingController = TextEditingController();
 
   @override
