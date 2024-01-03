@@ -75,6 +75,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  hero_animation:
+    dependency: "direct main"
+    description:
+      name: hero_animation
+      sha256: e862b27e3bddea486923922bd436cf52b9a28d1a35a342f150e91367647f3215
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.4"
   lints:
     dependency: transitive
     description:
@@ -186,3 +194,4 @@ packages:
     version: "0.3.0"
 sdks:
   dart: ">=3.2.3 <4.0.0"
+  flutter: ">=1.17.0"
